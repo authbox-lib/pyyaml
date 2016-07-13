@@ -13,9 +13,12 @@ from __future__ import unicode_literals
 __all__ = ['Emitter', 'EmitterError']
 
 import six
+import sys
 
 from .error import YAMLError
 from .events import *
+
+has_ucs4 = sys.maxunicode > 0xffff
 
 class EmitterError(YAMLError):
     pass
@@ -708,7 +711,8 @@ class Emitter:
                 line_breaks = True
             if not (ch == '\n' or '\x20' <= ch <= '\x7E'):
                 if (ch == '\x85' or '\xA0' <= ch <= '\uD7FF'
-                        or '\uE000' <= ch <= '\uFFFD') and ch != '\uFEFF':
+                        or u'\uE000' <= ch <= u'\uFFFD'
+                        or ((not has_ucs4) or (u'\U00010000' <= ch < u'\U0010ffff'))) and ch != u'\uFEFF':
                     unicode_characters = True
                     if not self.allow_unicode:
                         special_characters = True

@@ -24,8 +24,12 @@ __all__ = ['Reader', 'ReaderError']
 
 from .error import YAMLError, Mark
 
-import codecs, re
+import codecs
+import re
 import six
+import sys
+
+has_ucs4 = sys.maxunicode > 0xffff
 
 class ReaderError(YAMLError):
 
@@ -141,7 +145,11 @@ class Reader(object):
                 self.encoding = 'utf-8'
         self.update(1)
 
-    NON_PRINTABLE = re.compile('[^\x09\x0A\x0D\x20-\x7E\x85\xA0-\uD7FF\uE000-\uFFFD]')
+    if has_ucs4:
+        NON_PRINTABLE = re.compile(u'[^\x09\x0A\x0D\x20-\x7E\x85\xA0-\uD7FF\uE000-\uFFFD\U00010000-\U0010ffff]')
+    else:
+        NON_PRINTABLE = re.compile(u'[^\x09\x0A\x0D\x20-\x7E\x85\xA0-\uD7FF\uE000-\uFFFD]')
+
     def check_printable(self, data):
         match = self.NON_PRINTABLE.search(data)
         if match:
