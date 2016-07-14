@@ -13,11 +13,11 @@ with open(os.path.join(ROOT, "README.rst")) as fp:
 
 setuptools.setup(
     name="yaml",
-    version="4.0.dev0",
+    version="4.0.authbox0",
     description="YAML parser and emitter for Python",
     long_description=long_description,
     license="MIT",
-    url="https://github.com/dstufft/yaml",
+    url="https://github.com/authbox-lib/pyyaml",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
 
